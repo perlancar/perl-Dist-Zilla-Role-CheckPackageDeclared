@@ -7,6 +7,8 @@ use 5.010001;
 use Moose::Role;
 with 'Dist::Zilla::Role::ModuleMetadata';
 
+use namespace::autoclean;
+
 my $cache; # hash. key=package name, value = first file that declares it
 
 sub is_package_declared {
@@ -14,7 +16,7 @@ sub is_package_declared {
 
     unless ($cache) {
         $cache = {};
-        for my $file ($self->zilla->find_files(':InstallModules')) {
+        for my $file (@{ $self->zilla->find_files(':InstallModules') }) {
             $self->log_fatal([ 'Could not decode %s: %s', $file->name, $file->added_by ])
                 if $file->can('encoding') and $file->encoding eq 'bytes';
             my @packages = $self->module_metadata_for_file($file)->packages_inside;
@@ -25,7 +27,6 @@ sub is_package_declared {
     exists $cache->{$package} ? 1:0;
 }
 
-no Moose::Role;
 1;
 # ABSTRACT: Role to check if a package is provided by your distribution
 
