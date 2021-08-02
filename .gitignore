@@ -2,3 +2,4 @@ Dist-Zilla-Role-CheckPackageDeclared-*
 .build
 *~
 nytprof*
+.DS_Store
